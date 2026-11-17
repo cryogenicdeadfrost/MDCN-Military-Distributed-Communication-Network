@@ -73,6 +73,13 @@ contract MDCNTactical {
         uint8 _branch,
         string memory _data
     ) public {
+        IMDCNCommand.Role senderRole = commandContract.roles(msg.sender);
+        IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
+        require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can log Field Data");
+        require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
+        require(_branch >= 1 && _branch <= 3, "Invalid branch");
+
         fieldCount++;
 
         // For the legacy version, we don't know the exact recipient,
@@ -165,6 +172,13 @@ contract MDCNTactical {
         uint256 _assetId,
         string memory _status
     ) public {
+        IMDCNCommand.Role senderRole = commandContract.roles(msg.sender);
+        IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
+        require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can update Maintenance");
+        require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
+        require(_branch >= 1 && _branch <= 3, "Invalid branch");
+
         maintenanceCount++;
 
         // For the legacy version, we don't know the exact recipient,
