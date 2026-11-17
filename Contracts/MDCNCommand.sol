@@ -91,8 +91,9 @@ contract MDCNCommand {
         uint8 _branch,
         string memory _commandText
     ) public {
+        require(_layer >= 1 && _layer <= 3, "Invalid command layer");
         require(
-            uint8(roles[msg.sender]) >= _layer,
+            uint8(roles[msg.sender]) <= _layer,
             "Unauthorized: insufficient role"
         );
         commandCount++;
