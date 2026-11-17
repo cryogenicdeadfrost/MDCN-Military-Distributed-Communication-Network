@@ -66,6 +66,34 @@ task("generate-config", "Generates a config file with contract and admin address
       JSON.stringify(config, null, 2)
     );
     
+    // Generate local wallet maps only when the dev setup runs.
+    const publicDir = path.join(__dirname, "public");
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(publicDir, "softhat-accounts.json"),
+      JSON.stringify({
+        accounts: walletData.map((wallet) => ({
+          ...wallet,
+          token: `SOFT-${String(wallet.index + 1).padStart(2, "0")}-31337`
+        }))
+      }, null, 2)
+    );
+
+    fs.writeFileSync(
+      path.join(publicDir, "crafthat-accounts.json"),
+      JSON.stringify({
+        accounts: walletData.map((wallet) => ({
+          index: wallet.index,
+          address: wallet.address,
+          privateKey: wallet.privateKey,
+          token: `CRAFT-${String(wallet.index + 1).padStart(2, "0")}-31337`
+        }))
+      }, null, 2)
+    );
+
     // Create MetaMask import instructions
     const metamaskInstructions = walletData.slice(0, 20).map(wallet => 
       `Account #${wallet.index}: ${wallet.address}\nPrivate Key: ${wallet.privateKey}\n`

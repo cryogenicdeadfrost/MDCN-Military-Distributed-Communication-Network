@@ -1,1 +1,9 @@
 node_modules
+config/network-config.json
+config/metamask-import.txt
+network-config.json
+public/softhat-accounts.json
+public/crafthat-accounts.json
+build/softhat-accounts.json
+build/crafthat-accounts.json
+metamask-import.txt
