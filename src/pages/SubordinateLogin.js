@@ -8,18 +8,12 @@ const SubordinateLogin = ({ account, userRole }) => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Simple passcode for demonstration - in a real app, this would be more secure
-    const correctPasscode = "soldier123";
-    
-    if (userRole < 1) {
-      setError("Your wallet is not authorized in the system.");
-    } else if (userRole === 1) {
-      // Strategic/Admin users should use the admin login
-      setError("As an admin, please use the Admin login page.");
-    } else if (passcode === correctPasscode) {
+    if (userRole >= 2) {
       navigate("/subordinate/dashboard");
+    } else if (userRole === 1) {
+      setError("As an admin, please use the Admin login page.");
     } else {
-      setError("Incorrect passcode.");
+      setError("Your wallet is not authorized in the system.");
     }
   };
 
