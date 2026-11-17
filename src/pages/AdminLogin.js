@@ -8,13 +8,10 @@ const AdminLogin = ({ account, isAdmin }) => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    const correctPasscode = "admin1234"; // Demo passcode; replace with secure method
-    if (!isAdmin) {
-      setError("Your wallet is not authorized as admin.");
-    } else if (passcode === correctPasscode) {
+    if (isAdmin) {
       navigate("/admin/dashboard");
     } else {
-      setError("Incorrect passcode.");
+      setError("Your wallet is not authorized as admin.");
     }
   };
 
