@@ -53,6 +53,13 @@ contract MDCNCoordination {
         uint8 _branch,
         string memory _data
     ) public {
+        IMDCNCommand.Role senderRole = commandContract.roles(msg.sender);
+        IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
+        require(senderRole != IMDCNCommand.Role.None, "Protocol Breach: Sender has no role");
+        require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
+        require(_branch >= 1 && _branch <= 3, "Invalid branch");
+
         intelCount++;
         // In legacy mode, we do not know the exact recipient – so we use a dummy address.
         address dummyRecipient = address(
