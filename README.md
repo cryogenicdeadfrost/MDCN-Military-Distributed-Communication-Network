@@ -235,3 +235,10 @@ Check all of the following:
 This is a local simulation/demo architecture intended for role-driven communication flows and contract interaction testing. It is not presented as a hardened production command system.
 
 If you treat it like production anyway, at least log your risks somewhere official so future you can say "we discussed this".
+
+
+## Security hardening notes (proposed)
+
+The contract hardening branch tightens the direct-command role and layer checks, rejects zero or unregistered direct recipients, and prevents arbitrary accounts from acknowledging records. Legacy group/branch communication without a concrete recipient is being retired from acknowledgement-sensitive paths. Review the migration implications before deploying updated contracts: Solidity changes require redeployment, and old contract addresses and stored messages are not migrated automatically.
+
+This project remains a local simulation. These changes are defense-in-depth for the prototype, not a certification or assurance claim.
