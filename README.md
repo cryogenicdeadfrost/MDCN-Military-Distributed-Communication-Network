@@ -4,7 +4,7 @@ This project is a local, role-based communication simulation built on Solidity s
 
 If you want the short version: people with the right role send commands, other people acknowledge them, everyone pretends to be very serious, and the blockchain keeps receipts.
 
-###Quickstart & Demo
+## Quickstart and demo
 
 **1. Launch Everything at Once**
 Open a terminal in the project directory and run:
@@ -120,7 +120,7 @@ If an account has no role assigned, it will be blocked from functional dashboard
 
 ## Prerequisites
 
-- Node.js 16+ (18+ recommended)
+- Node.js 20 LTS or newer
 - npm
 - Optional: MetaMask extension if you want MetaMask mode
 
@@ -232,6 +232,37 @@ Check all of the following:
 
 ## Current status and intent
 
-This is a local simulation/demo architecture intended for role-driven communication flows and contract interaction testing. It is not presented as a hardened production command system.
+This is a local simulation and demonstration architecture for role-driven communication flows and smart-contract interaction testing. It is not a hardened production command system. The contracts are public, transactions are transparent, and on-chain message contents must be treated as publicly readable. Do not use this project for real operational, classified, emergency, or safety-critical communications.
 
 If you treat it like production anyway, at least log your risks somewhere official so future you can say "we discussed this".
+
+
+## Security and operational boundaries
+
+MDCN is an educational local-network prototype. It does not provide confidentiality for on-chain messages, key management, identity proofing, resilient command delivery, or production-grade operational security. Blockchain writes are publicly observable and generally irreversible. Never place real credentials, sensitive operational details, personal data, or classified material in a transaction.
+
+Use only disposable local Hardhat accounts. The default mnemonic is public and must never be reused with funds or external networks. SoftHat is a development convenience, not a secure wallet. A browser application cannot keep a private key secret once it is imported into the page.
+
+## Repository layout
+
+- `Contracts/`: Solidity source contracts.
+- `scripts/`: local deployment, setup, and demo utilities.
+- `src/`: React application and UI components.
+- `test/`: contract authorization tests.
+- `.github/`: dependency update automation.
+
+Generated build output, compiler artifacts, local account exports, and deployment configuration should be reproducible from source and should not be treated as source-of-truth files.
+
+## Development checks
+
+Run the following before proposing changes:
+
+```bash
+npm ci
+npm test -- --watchAll=false
+npx hardhat compile
+npx hardhat test
+npm run build
+```
+
+The current contract ABI and deployment output must match the checked-in application interfaces. Changes to Solidity authorization rules should include tests for both allowed and denied callers.
