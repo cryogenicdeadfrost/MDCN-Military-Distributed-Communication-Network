@@ -237,32 +237,8 @@ This is a local simulation and demonstration architecture for role-driven commun
 If you treat it like production anyway, at least log your risks somewhere official so future you can say "we discussed this".
 
 
-## Security and operational boundaries
+## Security hardening notes (proposed)
 
-MDCN is an educational local-network prototype. It does not provide confidentiality for on-chain messages, key management, identity proofing, resilient command delivery, or production-grade operational security. Blockchain writes are publicly observable and generally irreversible. Never place real credentials, sensitive operational details, personal data, or classified material in a transaction.
+The contract hardening branch tightens the direct-command role and layer checks, rejects zero or unregistered direct recipients, and prevents arbitrary accounts from acknowledging records. Legacy group/branch communication without a concrete recipient is being retired from acknowledgement-sensitive paths. Review the migration implications before deploying updated contracts: Solidity changes require redeployment, and old contract addresses and stored messages are not migrated automatically.
 
-Use only disposable local Hardhat accounts. The default mnemonic is public and must never be reused with funds or external networks. SoftHat is a development convenience, not a secure wallet. A browser application cannot keep a private key secret once it is imported into the page.
-
-## Repository layout
-
-- `Contracts/`: Solidity source contracts.
-- `scripts/`: local deployment, setup, and demo utilities.
-- `src/`: React application and UI components.
-- `test/`: contract authorization tests.
-- `.github/`: dependency update automation.
-
-Generated build output, compiler artifacts, local account exports, and deployment configuration should be reproducible from source and should not be treated as source-of-truth files.
-
-## Development checks
-
-Run the following before proposing changes:
-
-```bash
-npm ci
-npm test -- --watchAll=false
-npx hardhat compile
-npx hardhat test
-npm run build
-```
-
-The current contract ABI and deployment output must match the checked-in application interfaces. Changes to Solidity authorization rules should include tests for both allowed and denied callers.
+This project remains a local simulation. These changes are defense-in-depth for the prototype, not a certification or assurance claim.

@@ -127,8 +127,11 @@ contract MDCNCommand {
         uint8 _layer,
         string memory _commandText
     ) public {
+        require(_layer >= 1 && _layer <= 3, "Invalid command layer");
+        require(_recipient != address(0), "Invalid recipient");
+        require(roles[_recipient] != Role.None, "Recipient has no role");
         require(
-            uint8(roles[msg.sender]) >= _layer,
+            uint8(roles[msg.sender]) <= _layer,
             "Unauthorized: insufficient role"
         );
         commandCount++;
@@ -163,12 +166,25 @@ contract MDCNCommand {
         Command storage cmd = commands[_commandId];
         require(cmd.id != 0, "Command does not exist");
         require(!cmd.acknowledged, "Already acknowledged");
-        // In a real system you might check that msg.sender is the intended recipient.
+        require(
+            msg.sender == cmd.sender || _isIntendedRecipient(cmd, msg.sender),
+            "Not authorized to acknowledge"
+        );
         cmd.acknowledged = true;
         cmd.acknowledgedBy = msg.sender;
         cmd.acknowledgedTimestamp = block.timestamp;
 
         emit CommandAcknowledged(_commandId, msg.sender, block.timestamp);
+    }
+
+    function _isIntendedRecipient(Command storage cmd, address account) internal view returns (bool) {
+        // Direct commands currently use the zero group/branch sentinel. The legacy
+        // group command format does not bind a concrete recipient, so it cannot be
+        // safely acknowledged by an arbitrary account.
+        if (cmd.recipientGroup == RecipientGroup.None && cmd.branch == Branch.None) {
+            return false;
+        }
+        return branches[account] == cmd.branch && roles[account] != Role.None;
     }
 
     // Mark a command as executed - admin only
