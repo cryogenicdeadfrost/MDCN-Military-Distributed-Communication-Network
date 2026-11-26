@@ -57,6 +57,10 @@ contract MDCNCoordination {
         IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
         require(senderRole != IMDCNCommand.Role.None, "Protocol Breach: Sender has no role");
         require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        require(
+            senderRole == IMDCNCommand.Role.Strategic || senderRole == IMDCNCommand.Role.Operational,
+            "Protocol Breach: Only command staff can use legacy intelligence sync"
+        );
         require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
         require(_branch >= 1 && _branch <= 3, "Invalid branch");
 
@@ -96,6 +100,7 @@ contract MDCNCoordination {
         IMDCNCommand.Branch recipientBranch = commandContract.branches(_recipient);
 
         require(senderRole != IMDCNCommand.Role.None, "Protocol Breach: Sender has no role");
+        require(_recipient != address(0), "Protocol Breach: Invalid recipient");
         require(recipientRole != IMDCNCommand.Role.None, "Protocol Breach: Recipient does not exist");
 
         if (senderRole == IMDCNCommand.Role.Tactical) {
@@ -151,13 +156,11 @@ contract MDCNCoordination {
         IntelMessage storage intel = intelStore[_intelId];
         require(intel.id != 0, "Intel not found");
         require(!intel.acknowledged, "Already acknowledged");
-        // For legacy entries, relax the requirement if we use the dummy address.
-        if (
-            intel.recipient !=
-            address(0x1234567890123456789012345678901234567890)
-        ) {
-            require(msg.sender == intel.recipient, "Not the recipient");
-        }
+        require(
+            intel.recipient != address(0x1234567890123456789012345678901234567890),
+            "Legacy message has no designated recipient"
+        );
+        require(msg.sender == intel.recipient, "Not the recipient");
         intel.acknowledged = true;
         intel.acknowledgedBy = msg.sender;
         intel.acknowledgedTimestamp = block.timestamp;
