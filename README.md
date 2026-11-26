@@ -4,7 +4,7 @@ This project is a local, role-based communication simulation built on Solidity s
 
 If you want the short version: people with the right role send commands, other people acknowledge them, everyone pretends to be very serious, and the blockchain keeps receipts.
 
-###Quickstart & Demo
+## Quickstart and demo
 
 **1. Launch Everything at Once**
 Open a terminal in the project directory and run:
@@ -120,7 +120,7 @@ If an account has no role assigned, it will be blocked from functional dashboard
 
 ## Prerequisites
 
-- Node.js 16+ (18+ recommended)
+- Node.js 20 LTS or newer
 - npm
 - Optional: MetaMask extension if you want MetaMask mode
 
@@ -232,7 +232,7 @@ Check all of the following:
 
 ## Current status and intent
 
-This is a local simulation/demo architecture intended for role-driven communication flows and contract interaction testing. It is not presented as a hardened production command system.
+This is a local simulation and demonstration architecture for role-driven communication flows and smart-contract interaction testing. It is not a hardened production command system. The contracts are public, transactions are transparent, and on-chain message contents must be treated as publicly readable. Do not use this project for real operational, classified, emergency, or safety-critical communications.
 
 If you treat it like production anyway, at least log your risks somewhere official so future you can say "we discussed this".
 
