@@ -7,3 +7,33 @@ public/crafthat-accounts.json
 build/softhat-accounts.json
 build/crafthat-accounts.json
 metamask-import.txt
+
+# Node / frontend build output
+node_modules/
+build/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Hardhat generated output
+artifacts/
+cache/
+src/artifacts/
+
+# Local secrets and deployment state
+.env
+.env.*
+!.env.example
+config/
+network-config.json
+metamask-import.txt
+public/softhat-accounts.json
+public/crafthat-accounts.json
+
+# Local editor / OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
