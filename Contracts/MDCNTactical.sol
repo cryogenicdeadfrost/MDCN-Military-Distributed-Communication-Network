@@ -77,6 +77,7 @@ contract MDCNTactical {
         IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
         require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can log Field Data");
         require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        revert("Legacy field logging has no designated recipient; use logFieldData(address,string)");
         require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
         require(_branch >= 1 && _branch <= 3, "Invalid branch");
 
@@ -116,6 +117,7 @@ contract MDCNTactical {
         IMDCNCommand.Branch recipientBranch = commandContract.branches(_recipient);
 
         require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can log Field Data");
+        require(_recipient != address(0), "Protocol Breach: Invalid recipient");
         require(
             (recipientRole == IMDCNCommand.Role.Strategic || recipientRole == IMDCNCommand.Role.Operational) && 
             senderBranch == recipientBranch,
@@ -149,13 +151,11 @@ contract MDCNTactical {
         require(f.id != 0, "Field data not found");
         require(!f.acknowledged, "Already acknowledged");
 
-        // In legacy mode, we may not know the exact recipient, so we relax this check
-        // but we still enforce it for newer entries
-        if (
-            f.recipient != address(0x1234567890123456789012345678901234567890)
-        ) {
-            require(msg.sender == f.recipient, "Not the intended recipient");
-        }
+        require(
+            f.recipient != address(0x1234567890123456789012345678901234567890),
+            "Legacy field message has no designated recipient"
+        );
+        require(msg.sender == f.recipient, "Not the intended recipient");
 
         f.acknowledged = true;
         f.acknowledgedBy = msg.sender;
@@ -176,6 +176,7 @@ contract MDCNTactical {
         IMDCNCommand.Branch senderBranch = commandContract.branches(msg.sender);
         require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can update Maintenance");
         require(senderBranch != IMDCNCommand.Branch.None, "Protocol Breach: Sender has no branch");
+        revert("Legacy maintenance updates have no designated recipient; use updateMaintenance(address,uint256,string)");
         require(_recipientGroup >= 1 && _recipientGroup <= 4, "Invalid recipient group");
         require(_branch >= 1 && _branch <= 3, "Invalid branch");
 
@@ -221,6 +222,7 @@ contract MDCNTactical {
         IMDCNCommand.Branch recipientBranch = commandContract.branches(_recipient);
 
         require(senderRole == IMDCNCommand.Role.Tactical, "Protocol Breach: Only Tactical units can update Maintenance");
+        require(_recipient != address(0), "Protocol Breach: Invalid recipient");
         require(
             (recipientRole == IMDCNCommand.Role.Strategic || recipientRole == IMDCNCommand.Role.Operational) && 
             senderBranch == recipientBranch,
@@ -256,13 +258,11 @@ contract MDCNTactical {
         require(m.id != 0, "Maintenance message not found");
         require(!m.acknowledged, "Already acknowledged");
 
-        // In legacy mode, we may not know the exact recipient, so we relax this check
-        // but we still enforce it for newer entries
-        if (
-            m.recipient != address(0x1234567890123456789012345678901234567890)
-        ) {
-            require(msg.sender == m.recipient, "Not the intended recipient");
-        }
+        require(
+            m.recipient != address(0x1234567890123456789012345678901234567890),
+            "Legacy maintenance message has no designated recipient"
+        );
+        require(msg.sender == m.recipient, "Not the intended recipient");
 
         m.acknowledged = true;
         m.acknowledgedBy = msg.sender;
